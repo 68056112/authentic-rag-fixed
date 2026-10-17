@@ -15,7 +15,9 @@
   docker run -d --name opensearch -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" opensearchproject/opensearch:2.19.1
   ```
 
-- API key ของ LLM ที่รองรับ OpenAI SDK: OpenRouter (Qwen แบบโค้ดเดิม) หรือ Gemini API (Gemma 4)
+- LLM เลือกได้ 2 แบบ ตั้งค่าใน `.env` ตามตัวอย่างใน `.env.example`
+  - **Claude ผ่าน Claude Code CLI** (`LLM_PROVIDER=claude-cli`) ใช้บัญชีที่ล็อกอินด้วย `claude auth login` ไม่ต้องมี API key ผลใน REPORT.md ใช้ `claude-haiku-5-5`
+  - **LLM ที่รองรับ OpenAI SDK** เช่น OpenRouter (Qwen แบบโค้ดเดิม) หรือ Gemini API (Gemma 4)
 - ไม่ต้องใช้ Ollama: embedding ใช้ `BAAI/bge-m3` ผ่าน sentence-transformers (โหลดครั้งแรกประมาณ 2 GB) และ reranker ใช้ `BAAI/bge-reranker-v2-m3`
 
 ## ติดตั้งและใช้งาน
@@ -34,7 +36,7 @@ cp .env.example .env
 
 `fetch_corpus.py` ดาวน์โหลดบทความ 4 เรื่องจาก repo ต้นฉบับ (ล็อก commit และตรวจ sha256) เพราะ repo นี้ไม่แจกจ่ายเนื้อหาของเว็บเมดไทยซ้ำ
 
-แก้ไฟล์ `.env` ใส่ key ของตัวเอง แล้วรัน:
+แก้ไฟล์ `.env` เลือก LLM ของตัวเอง แล้วรัน:
 
 ```bash
 python authenticRAG.py
@@ -44,7 +46,7 @@ python authenticRAG.py
 python onlysearchAuthenticRAG.py "ระยะฟักตัวของโรคหัดเยอรมันนานกี่วัน"
 ```
 
-- `python authenticRAG.py` นำเอกสารเข้า index ชื่อ `authentic-rag-fixed` โดย context ที่ LLM สร้างจะ cache ไว้ใน `results/contexts_cache.json` ซึ่ง repo มี cache ของเอกสาร 4 ไฟล์มาให้แล้ว ถ้าไม่ได้เปลี่ยนเอกสารก็ไม่ต้องเรียก LLM เลย
+- `python authenticRAG.py` นำเอกสารเข้า index ชื่อ `authentic-rag-fixed` โดย context ที่ LLM สร้างจะ cache ไว้ใน `results/contexts_cache.<model>.<mode>.json` ซึ่ง repo มี cache ของ Claude Haiku 5.5 (full) และ Gemma 4 (outline) มาให้แล้ว ถ้าใช้โมเดลและโหมดเดียวกันโดยไม่เปลี่ยนเอกสาร ก็ไม่ต้องเรียก LLM เลย
 - `python onlysearchAuthenticRAG.py` (ไม่ใส่คำถาม) จะตอบชุดคำถามเดิม 5 ข้อ แล้วบันทึกลง `authentic_rag_search_results.json`
 - ใส่โหมดค้นเป็นอาร์กิวเมนต์ที่สองได้: `bm25`, `dense`, `hybrid` หรือ `rerank` (ค่าเริ่มต้น)
 
@@ -56,7 +58,7 @@ python eval/evaluate.py
 
 - จำลองระบบเดิมใน index `baseline-*` (`eval/baseline.py`) แล้ววัดเทียบกับฉบับแก้ไขด้วยชุดคำถาม `eval/questions.json` (29 ข้อ)
 - เขียนผลลง `results/metrics.md` และ `results/metrics.json`
-- ผลที่ได้จาก LLM ทุกครั้ง cache ไว้ใน `results/llm_cache.json` รันซ้ำได้โดยไม่ต้องเรียก LLM ใหม่
+- ผลที่ได้จาก LLM ทุกครั้ง cache ไว้ใน `results/llm_cache.<model>.json` รันซ้ำได้โดยไม่ต้องเรียก LLM ใหม่
 - ใส่ `--no-llm` เพื่อข้ามขั้นตอบคำถามและให้คะแนน
 
 ## โครงสร้าง

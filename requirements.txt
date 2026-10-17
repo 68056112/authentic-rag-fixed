@@ -1,0 +1,7 @@
+# ทดสอบกับ Python 3.10, OpenSearch 2.19.1
+opensearch-py==3.2.0
+sentence-transformers==6.1.0
+openai==2.54.0
+numpy==2.2.6
+# เฉพาะ eval/ (จำลองระบบเดิม)
+llama-index-core==0.14.25
