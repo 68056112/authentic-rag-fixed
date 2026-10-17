@@ -1,0 +1,6 @@
+.env
+__pycache__/
+.venv/
+.DS_Store
+authentic_rag_search_results.json
+corpus_input/*.md
