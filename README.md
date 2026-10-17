@@ -1,5 +1,5 @@
 # Authentic RAG — ฉบับแก้ไข
-
+#****** ใช้ Claude Cli ในการทดสอบ เพราะว่า Gemma ติด Rate Limit
 ระบบ RAG ภาษาไทยที่แก้จาก [aekanun2020/2025-authenticRAG](https://github.com/aekanun2020/2025-authenticRAG)
 (`authenticRAG.py` + `onlysearchAuthenticRAG.py`) โดยวัดผลทีละขั้นก่อนแก้ และวัดซ้ำหลังแก้
 
